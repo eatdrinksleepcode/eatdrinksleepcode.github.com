@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://eatdrinksleepcode.github.com/sitemap.xml 
