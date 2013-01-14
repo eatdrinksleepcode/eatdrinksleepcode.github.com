@@ -31,6 +31,13 @@ module Jekyll
     #                   "next_page" => <Number> }}
     def paginate(site, page)
       all_posts = site.site_payload['site']['posts']
+
+      # show / hide some categories
+      op = (site.config['front_page_filter_op'] == 'hide') ? 'delete_if' : 'keep_if';
+      all_posts.send(op) do |post|
+        post.data[site.config['front_page_filter']]
+      end
+
       pages = Pager.calculate_pages(all_posts, site.config['paginate'].to_i)
       page_dir = page.destination('').sub(/\/[^\/]+$/, '')
       page_dir_config = site.config['pagination_dir']
