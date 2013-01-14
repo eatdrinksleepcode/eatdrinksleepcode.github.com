@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: .NET | Eat, Drink, Sleep, Code!]]></title>
+  <link href="http://eatdrinksleepcode.net/blog/categories/-net/atom.xml" rel="self"/>
+  <link href="http://eatdrinksleepcode.net/"/>
+  <updated>2013-01-13T22:10:58-06:00</updated>
+  <id>http://eatdrinksleepcode.net/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Introducing Locksmith]]></title>
+    <link href="http://eatdrinksleepcode.net/blog/introducing-locksmith/"/>
+    <updated>2013-01-14T00:00:00-06:00</updated>
+    <id>http://eatdrinksleepcode.net/blog/introducing-locksmith</id>
+    <content type="html"><![CDATA[<h2>What if you could mock (almost) anything in .NET?</h2>
+
+<h3>Introducing Locksmith for the .NET framework</h3>
+
+<p>Mocking libraries have dramatically simplified the process of unit testing dependency injected code. But although a number of good mocking libraries exist for the .NET framework, they are handicapped in a way that their counterparts in Java are not. Most mocking libraries work by dynamically generating a subclass of the type being mocked, and overriding its methods to return values (or take other actions) as specified in the test. However, in .NET most methods are not virtual and cannot be overridden. This <a href="http://www.artima.com/intv/nonvirtual.html">policy</a> of <a href="http://www.artima.com/forums/flat.jsp?forum=106&amp;thread=14374">non-virtual</a> by <a href="http://neverindoubtnet.blogspot.com/2009/08/do-not-make-every-method-virtual.html">default</a> has been <a href="http://ayende.com/blog/4126/virtually-everything">hotly</a> <a href="http://programmers.stackexchange.com/questions/144574/should-all-public-methods-in-an-abstract-class-be-marked-virtual">debated</a>, and will undoubtedly continue to be debated for some time to come. But with Locksmith, this policy doesn't keep you from mocking dependencies in your test code.</p>
+
+<p>Locksmith lets you treat all visible instance methods and properties in all loaded assemblies as virtual. That means that you can use your favorite mocking library to mock what is normally a non-virtual method, and it will just work. And it doesn't just work on your own code; non-virtual methods in other libraries, including the BCL, can be mocked with Locksmith. A single method call before any of your test code is executed is all that is required. For example, if you are using NUnit as your testing framework:</p>
+
+<p>``` c# Using Locksmith with NUnit (C#) https://bitbucket.org/eatdrinksleepcode/locksmith/wiki/Using%20EagerKey%20with%20NUnit Wiki Page
+[SetUpFixture]
+public class SetUpFixture {</p>
+
+<pre><code>[SetUp]
+public void SetUp() {
+    new EagerKey().UnlockReferences();
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>To get started using Locksmith, visit the <a href="https://bitbucket.org/eatdrinksleepcode/locksmith">project page</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

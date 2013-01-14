@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://eatdrinksleepcode.github.com/blog/archives/</loc>
-        <lastmod>2013-01-13T16:21:36-06:00</lastmod>
+        <loc>http://eatdrinksleepcode.net/blog/archives/</loc>
+        <lastmod>2013-01-13T21:45:39-06:00</lastmod>
     </url>
     <url>
-        <loc>http://eatdrinksleepcode.github.com/</loc>
-        <lastmod>2013-01-13T16:21:36-06:00</lastmod>
+        <loc>http://eatdrinksleepcode.net/</loc>
+        <lastmod>2013-01-13T21:45:39-06:00</lastmod>
     </url>
     <url>
-        <loc>http://eatdrinksleepcode.github.com/robots.txt</loc>
+        <loc>http://eatdrinksleepcode.net/robots.txt</loc>
         <lastmod>2013-01-13T16:21:36-06:00</lastmod>
     </url>
 </urlset>

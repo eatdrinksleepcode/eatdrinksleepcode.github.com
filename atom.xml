@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://eatdrinksleepcode.github.com/atom.xml" rel="self"/>
-  <link href="http://eatdrinksleepcode.github.com/"/>
-  <updated>2013-01-13T16:22:02-06:00</updated>
-  <id>http://eatdrinksleepcode.github.com/</id>
+  <title><![CDATA[Eat, Drink, Sleep, Code!]]></title>
+  <link href="http://eatdrinksleepcode.net/atom.xml" rel="self"/>
+  <link href="http://eatdrinksleepcode.net/"/>
+  <updated>2013-01-13T22:10:58-06:00</updated>
+  <id>http://eatdrinksleepcode.net/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Introducing Locksmith]]></title>
+    <link href="http://eatdrinksleepcode.net/blog/introducing-locksmith/"/>
+    <updated>2013-01-14T00:00:00-06:00</updated>
+    <id>http://eatdrinksleepcode.net/blog/introducing-locksmith</id>
+    <content type="html"><![CDATA[<h2>What if you could mock (almost) anything in .NET?</h2>
+
+<h3>Introducing Locksmith for the .NET framework</h3>
+
+<p>Mocking libraries have dramatically simplified the process of unit testing dependency injected code. But although a number of good mocking libraries exist for the .NET framework, they are handicapped in a way that their counterparts in Java are not. Most mocking libraries work by dynamically generating a subclass of the type being mocked, and overriding its methods to return values (or take other actions) as specified in the test. However, in .NET most methods are not virtual and cannot be overridden. This <a href="http://www.artima.com/intv/nonvirtual.html">policy</a> of <a href="http://www.artima.com/forums/flat.jsp?forum=106&amp;thread=14374">non-virtual</a> by <a href="http://neverindoubtnet.blogspot.com/2009/08/do-not-make-every-method-virtual.html">default</a> has been <a href="http://ayende.com/blog/4126/virtually-everything">hotly</a> <a href="http://programmers.stackexchange.com/questions/144574/should-all-public-methods-in-an-abstract-class-be-marked-virtual">debated</a>, and will undoubtedly continue to be debated for some time to come. But with Locksmith, this policy doesn&#8217;t keep you from mocking dependencies in your test code.</p>
+
+<p>Locksmith lets you treat all visible instance methods and properties in all loaded assemblies as virtual. That means that you can use your favorite mocking library to mock what is normally a non-virtual method, and it will just work. And it doesn&#8217;t just work on your own code; non-virtual methods in other libraries, including the BCL, can be mocked with Locksmith. A single method call before any of your test code is executed is all that is required. For example, if you are using NUnit as your testing framework:</p>
+
+<figure class='code'><figcaption><span>Using Locksmith with NUnit (C#)</span><a href='https://bitbucket.org/eatdrinksleepcode/locksmith/wiki/Using%20EagerKey%20with%20NUnit'>Wiki Page</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='c#'><span class='line'><span class="na">[SetUpFixture]</span>
+</span><span class='line'><span class="k">public</span> <span class="k">class</span> <span class="nc">SetUpFixture</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="na">    [SetUp]</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">void</span> <span class="nf">SetUp</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">new</span> <span class="nf">EagerKey</span><span class="p">().</span><span class="n">UnlockReferences</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To get started using Locksmith, visit the <a href="https://bitbucket.org/eatdrinksleepcode/locksmith">project page</a>.</p>
+]]></content>
+  </entry>
   
 </feed>
