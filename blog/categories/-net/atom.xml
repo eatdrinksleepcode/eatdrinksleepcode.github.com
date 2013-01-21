@@ -4,7 +4,7 @@
   <title><![CDATA[Category: .NET | Eat, Drink, Sleep, Code!]]></title>
   <link href="http://eatdrinksleepcode.net/blog/categories/-net/atom.xml" rel="self"/>
   <link href="http://eatdrinksleepcode.net/"/>
-  <updated>2013-01-13T22:10:58-06:00</updated>
+  <updated>2013-01-21T02:54:37-06:00</updated>
   <id>http://eatdrinksleepcode.net/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -22,24 +22,54 @@
 
 <h3>Introducing Locksmith for the .NET framework</h3>
 
-<p>Mocking libraries have dramatically simplified the process of unit testing dependency injected code. But although a number of good mocking libraries exist for the .NET framework, they are handicapped in a way that their counterparts in Java are not. Most mocking libraries work by dynamically generating a subclass of the type being mocked, and overriding its methods to return values (or take other actions) as specified in the test. However, in .NET most methods are not virtual and cannot be overridden. This <a href="http://www.artima.com/intv/nonvirtual.html">policy</a> of <a href="http://www.artima.com/forums/flat.jsp?forum=106&amp;thread=14374">non-virtual</a> by <a href="http://neverindoubtnet.blogspot.com/2009/08/do-not-make-every-method-virtual.html">default</a> has been <a href="http://ayende.com/blog/4126/virtually-everything">hotly</a> <a href="http://programmers.stackexchange.com/questions/144574/should-all-public-methods-in-an-abstract-class-be-marked-virtual">debated</a>, and will undoubtedly continue to be debated for some time to come. But with Locksmith, this policy doesn't keep you from mocking dependencies in your test code.</p>
+<p>Mocking libraries have dramatically simplified the process of unit testing dependency injected code. But although a number of good mocking libraries exist for the .NET framework, they are handicapped in a way that their counterparts in Java are not. Most mocking libraries work by dynamically generating a subclass of the type being mocked, and overriding its methods to return values (or take other actions) as specified in the test. However, in .NET most methods are not virtual and cannot be overridden. This <a href="http://www.artima.com/intv/nonvirtual.html">policy</a> of <a href="http://www.artima.com/forums/flat.jsp?forum=106&amp;thread=14374">non-virtual</a> by <a href="http://neverindoubtnet.blogspot.com/2009/08/do-not-make-every-method-virtual.html">default</a> has been <a href="http://ayende.com/blog/4126/virtually-everything">hotly</a> <a href="http://programmers.stackexchange.com/questions/144574/should-all-public-methods-in-an-abstract-class-be-marked-virtual">debated</a>, and will undoubtedly continue to be debated for some time to come. But with Locksmith, sealed classes and non-virtual methods are not a barrier to mocking dependencies in your test code.</p>
 
-<p>Locksmith lets you treat all visible instance methods and properties in all loaded assemblies as virtual. That means that you can use your favorite mocking library to mock what is normally a non-virtual method, and it will just work. And it doesn't just work on your own code; non-virtual methods in other libraries, including the BCL, can be mocked with Locksmith. A single method call before any of your test code is executed is all that is required. For example, if you are using NUnit as your testing framework:</p>
+<p>By rewriting assemblies as they are loaded by the CLR, Locksmith lets you treat all visible instance methods and properties in <a href="#catch">almost</a> all loaded assemblies as virtual. That means that you can use your favorite mocking library to mock what is normally a non-virtual method, and it will just work. And it doesn't just work on your own code; non-virtual methods in other libraries, including the BCL, can be mocked with Locksmith. A few lines of code before any of your test code is executed are all that is required. For example, if you are using NUnit as your testing framework:</p>
 
 <p>``` c# Using Locksmith with NUnit (C#) https://bitbucket.org/eatdrinksleepcode/locksmith/wiki/Using%20EagerKey%20with%20NUnit Wiki Page
 [SetUpFixture]
-public class SetUpFixture {</p>
+public class SetUpTearDown : IDisposable {</p>
 
-<pre><code>[SetUp]
+<pre><code>private Key key;
+
+[SetUp]
 public void SetUp() {
-    new EagerKey().UnlockReferences();
+    key = new Key();
+    key.StartUnlocking();
+}
+
+public void Dispose() {
+    if (null != key) {
+        key.Dispose();
+    }
 }
 </code></pre>
 
 <p>}
 ```</p>
 
-<p>To get started using Locksmith, visit the <a href="https://bitbucket.org/eatdrinksleepcode/locksmith">project page</a>.</p>
+<p>Then you can create a mock of <a href="#catch">almost</a> any type, for example the previously unmockable HttpRequest:</p>
+
+<p>``` c# Mocking a non-virtual method with Moq (C#)
+[TestFixture]
+public class Tests {</p>
+
+<pre><code>[Test]
+public void ReturnKnownValueFromAcceptTypes() {
+    Castle.DynamicProxy.Generators.AttributesToAvoidReplicating.Add&lt;AspNetHostingPermissionAttribute&gt;();
+    var mock = new Mock&lt;HttpRequest&gt;("", "http://eatdrinksleepcode.net", "");
+    mock.Setup(request =&gt; request.AcceptTypes).Returns(new[] {"html"});
+    CollectionAssert.AreEqual(new[] {"html"}, mock.AcceptTypes);
+}
+</code></pre>
+
+<p>}
+```
+<a id="catch"></a>* The catch is that because Locksmith rewrites assemblies at runtime, it cannot unlock any assembly that is loaded before the Key starts watching. That means that types from mscorlib cannot be unlocked, because mscorlib will always be loaded before Locksmith; nor can types from any assembly loaded by the unit testing framework. In the case of NUnit, that includes System, System.Configuration, and System.Xml.</p>
+
+<p>Note that the test code does not have any reference to Locksmith. It simply mocks HttpRequest as if it were unsealed (because it is) and mocks the return value of the AcceptTypes property as if it were virtual (because it is). As a result, .NET developers can write test code that injects dependencies without having to worry about whether the dependency is "mockable": when the test executes, it will be. Additional interfaces and unnecessarily virtual methods are no longer required.</p>
+
+<p>To get started using Locksmith, visit the <a href="https://bitbucket.org/eatdrinksleepcode/locksmith">project page</a>, or install the <a href="http://nuget.org/packages/Locksmith">Nuget package</a> and jump right in. If you find a bug or have a suggestion, please <a href="Issue%20tracker">submit it</a>; or better yet, <a href="https://bitbucket.org/eatdrinksleepcode/locksmith/fork">fork the project</a>, write some code, and submit a <a href="https://bitbucket.org/eatdrinksleepcode/locksmith/pull-request/new">pull request</a>.</p>
 ]]></content>
   </entry>
   
